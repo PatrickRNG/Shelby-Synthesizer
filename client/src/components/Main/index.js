@@ -2,15 +2,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-const Test = () => <div>test</div>;
+import { Synthesizer } from '../../views';
 
 const Main = () => {
   return (
-    <main>
+    <main style={{height: '100%'}}>
       <Switch>
-        <div>
-          <Route exact path="/doc" component={Test} />
-        </div>
+        <Route exact path="/synthesizer" component={Synthesizer} />
       </Switch>
     </main>
   );
