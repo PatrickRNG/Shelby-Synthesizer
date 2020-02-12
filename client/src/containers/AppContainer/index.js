@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 
 import { Layout, Main } from '../../components';
 
-const AppContainer = props => (
+const AppContainer = () => (
   <Layout>
     <Main />
   </Layout>

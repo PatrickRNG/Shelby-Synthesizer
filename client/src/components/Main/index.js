@@ -6,11 +6,9 @@ import { Synthesizer } from '../../views';
 
 const Main = () => {
   return (
-    <main style={{height: '100%'}}>
-      <Switch>
-        <Route exact path="/synthesizer" component={Synthesizer} />
-      </Switch>
-    </main>
+    <Switch>
+      <Route exact path="/synthesizer" component={Synthesizer} />
+    </Switch>
   );
 };
 

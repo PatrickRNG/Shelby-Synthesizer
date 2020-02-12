@@ -10,6 +10,7 @@ const Paper = styled.div`
   padding: 24px;
   min-height: 280px;
   height: 100%;
+  overflow: auto;
 `;
 
 export {
