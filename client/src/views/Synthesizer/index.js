@@ -5,7 +5,6 @@ import { Icon } from 'antd';
 import {
   Dropzone,
   DropText,
-  FileArea,
   FileList,
   FileIcon,
   Flex,
@@ -13,7 +12,8 @@ import {
   FileName,
   FileSize,
   RemoveIcon,
-  DownloadIcon
+  DownloadIcon,
+  Button
 } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
 
@@ -43,10 +43,19 @@ const Synthesizer = () => {
     setFiles(newFiles);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const synthesizeFiles = () => {
+    // Send files to API and set the returned files response
+    // Iterate files, each file calls API
+    files.forEach(file => {
+      // const newFile = callApi(file);
+      
+    });
+  }
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  
   return (
-    <>
+    <Flex>
       <Dropzone {...getRootProps()}>
         <input {...getInputProps()} />
         <CloudIcon />
@@ -73,7 +82,8 @@ const Synthesizer = () => {
           </div>
         ))}
       </FileList>
-    </>
+      <Button onClick={synthesizeFiles}>Sintetizar</Button>
+    </Flex>
   );
 };
 

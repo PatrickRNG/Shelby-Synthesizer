@@ -10,7 +10,7 @@ const CloudUpload = () => (
       x="0px"
       y="0px"
       viewBox="0 0 486.3 486.3"
-      style={{ enableBackground: 'new 0 0 486.3 486.3', width: '70px' }}
+      style={{ enableBackground: 'new 0 0 486.3 486.3', width: '60px' }}
       xmlSpace="preserve"
     >
       <g>
