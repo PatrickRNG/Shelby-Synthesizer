@@ -2,13 +2,13 @@
 
 const express = require('express');
 const router = express.Router();
-const authController = require('../../../controllers/auth/controller');
+const { login, register, forgot_password, reset_password } = require('../../../controllers/auth/controller');
 const validator = require('express-validation');
 const { create } = require('../../../validations/user.validation');
 
-router.post('/register', validator(create), authController.register); // validate and register
-router.post('/login', authController.login); // login
+router.post('/register', validator(create), register); // validate and register
+router.post('/login', login); // login
 
-router.post('/forgot-password', authController.forgot_password);
-router.post('/reset-password', authController.reset_password);
+router.post('/forgot-password', forgot_password);
+router.post('/reset-password', reset_password);
 module.exports = router;

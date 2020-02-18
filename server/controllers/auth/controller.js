@@ -11,7 +11,7 @@ const sgMail = require('@sendgrid/mail');
 
 sgMail.setApiKey(config.sendgrid.apiKey);
 
-exports.register = async (req, res, next) => {
+const register = async (req, res, next) => {
   try {
     const user = new User(req.body);
     const savedUser = await user.save();
@@ -23,7 +23,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const user = await User.findAndGenerateToken(req.body);
     const payload = { sub: user.id, name: user.name, email: user.email };
@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
 };
 
 /** ask for a reset token */
-exports.forgot_password = function(req, res) {
+const forgot_password = function(req, res) {
   async.waterfall(
     [
       function(done) {
@@ -115,7 +115,7 @@ exports.forgot_password = function(req, res) {
 /**
  * Reset password
  */
-exports.reset_password = function(req, res, next) {
+const reset_password = function(req, res, next) {
   User.findOneAndUpdate(
     {
       reset_password_token: req.body.token,
@@ -133,3 +133,10 @@ exports.reset_password = function(req, res, next) {
     return res.json({ message: 'Success, Your Password has been reset' });
   });
 };
+
+module.exports = {
+  register,
+  login,
+  forgot_password,
+  reset_password
+}

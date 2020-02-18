@@ -1,61 +1,89 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Icon } from 'antd';
 
 import {
   Dropzone,
   DropText,
   FileList,
-  FileIcon,
-  Flex,
-  FileWrapper,
-  FileName,
-  FileSize,
-  RemoveIcon,
-  DownloadIcon,
+  FlexForm,
   Button
 } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
+import { apiUrl as BASE_URL } from '../../config/';
+import { FileWrapper } from '../../components';
+
+const apiUrl = `${BASE_URL}/files`;
 
 const Synthesizer = () => {
   const [files, setFiles] = useState([]);
 
-  const onDrop = useCallback(acceptedFiles => {
-    setFiles(acceptedFiles);
-    console.log(acceptedFiles);
+  const onDrop = useCallback(async (acceptedFiles) => {
+    const newAcceptedFiles = acceptedFiles
+    .filter(file => file.type === 'application/pdf')
+    .map(file => {
+      file.loading = 'false';
+      return file;
+    });
+
+    newAcceptedFiles.sort((a, b) => a.name.localeCompare(b.name));
+    setFiles(newAcceptedFiles);
   }, []);
-
-  const getFileIcon = type => {
-    switch (type) {
-      case 'application/pdf':
-        return <Icon type="file-pdf" />;
-      case 'image/jpeg':
-      case 'image/png':
-        return <Icon type="file-image" />;
-      default:
-        return <Icon type="file-text" />;
-    }
-  };
-
+  
   const deleteFile = (index) => {
     const newFiles = [...files];
     newFiles.splice(index, 1);
     setFiles(newFiles);
   };
 
-  const synthesizeFiles = () => {
-    // Send files to API and set the returned files response
-    // Iterate files, each file calls API
-    files.forEach(file => {
-      // const newFile = callApi(file);
-      
+  const fakeApiResponse = (file) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(file);
+      }, Math.random() * 5000);
     });
+  }
+
+  const sendFiles = async (formData) => {
+    return await fetch(apiUrl, {
+      headers: {
+        Accept: '*/*',
+      },
+      method: 'POST',
+      body: formData
+    });
+  };
+
+  const synthesizeFiles =async (e, files) => {
+    try {
+      e.preventDefault();
+      const formData = new FormData();
+      const loadingFiles = files.map(file => {
+        file.loading = 'true';
+        return file;
+      });
+
+      setFiles(loadingFiles);
+
+      await Promise.all(files.map(async (file) => {
+        const processedFile = await fakeApiResponse(file);
+        processedFile.loading = 'processed';
+        const remainingFiles = loadingFiles.filter(val => val.name !== processedFile.name);
+        const filesCompleted = [processedFile, ...remainingFiles];
+        filesCompleted.sort((a, b) => a.name.localeCompare(b.name));
+        setFiles(filesCompleted);
+        formData.append('files', file);
+      }));
+
+      await sendFiles(formData);
+    } catch (err) {
+      console.log('ERROR', err);
+    }
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   
   return (
-    <Flex>
+    <FlexForm onSubmit={(e) => synthesizeFiles(e, files)} encType='multipart/form-data'>
       <Dropzone {...getRootProps()}>
         <input {...getInputProps()} />
         <CloudIcon />
@@ -69,21 +97,11 @@ const Synthesizer = () => {
       </Dropzone>
       <FileList>
         {files.map((file, i) => (
-          <div key={i}>
-            <FileWrapper>
-              <FileIcon>{getFileIcon(file.type)}</FileIcon>
-              <Flex>
-                <FileName>{file.name}</FileName>
-                <FileSize>{Math.round(file.size / 1e6)}mb</FileSize>
-              </Flex>
-              <DownloadIcon type='download' />
-              <RemoveIcon type='delete' onClick={() => deleteFile(i)} />
-            </FileWrapper>
-          </div>
+          <FileWrapper loading={file.loading} key={i} file={file} deleteFile={() => deleteFile(i)} />
         ))}
       </FileList>
-      <Button onClick={synthesizeFiles}>Sintetizar</Button>
-    </Flex>
+      <Button type='submit'>Sintetizar</Button>
+    </FlexForm>
   );
 };
 

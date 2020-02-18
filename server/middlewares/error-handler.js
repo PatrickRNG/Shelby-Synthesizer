@@ -2,7 +2,7 @@
 
 const httpStatus = require('http-status');
 
-// hanlde not found error
+// handle not found error
 exports.handleNotFound = (req, res, next) => {
   res.status(httpStatus.NOT_FOUND);
   res.json({

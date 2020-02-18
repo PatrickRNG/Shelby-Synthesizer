@@ -7,10 +7,11 @@ import Auth from '../../utils/Auth';
 import Storage from '../../utils/Storage';
 import { apiUrl as BASE_URL } from '../../config/';
 
+const apiUrl = `${BASE_URL}/auth/login`;
+
 const LoginContainer = ({ form, history }) => {
   const [errors, setErrors] = useState({});
 
-  const apiUrl = `${BASE_URL}/auth/login`;
 
   const logout = () => {
     Storage.clear();
