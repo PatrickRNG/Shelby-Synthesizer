@@ -23,7 +23,7 @@ export default class Auth {
    * @returns {boolean}
    */
   static isUserAuthenticated() {
-    const expired = moment(Storage.getItem('tokenExpiration')).isBefore(moment());
+    const expired = moment(new Date(Storage.getItem('tokenExpiration'))).isBefore(moment());
     return Storage.getItem('token') !== null && !expired;
   }
 

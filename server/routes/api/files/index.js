@@ -3,16 +3,30 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { sendFiles } = require('../../../controllers/files/controller');
+const {
+  sendFiles,
+  downloadFile
+} = require('../../../controllers/files/controller');
 
 const MAX_SIZE = '20000000';
 
-const upload = multer({
-  dest: './uploads/',
-  limits: {
-    fileSize: MAX_SIZE
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
   }
 });
 
-router.post('/files', upload.array('files'), sendFiles);
+const upload = multer({
+  limits: {
+    fileSize: MAX_SIZE
+  },
+  storage
+});
+
+router.post('/upload', upload.array('files'), sendFiles);
+router.post('/download', downloadFile);
+
 module.exports = router;

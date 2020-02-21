@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Icon, Spin } from 'antd';
 
 import {
@@ -13,12 +14,9 @@ import {
   ProcessedText
 } from './styles.js';
 
-const FileWrapper = ({
-  file,
-  loading,
-  deleteFile,
-  downloadFile
-}) => {
+const FileWrapper = ({ file, loading, index, deleteFile, getFileUrl }) => {
+  const [fileUrl, setFileUrl] = useState(null);
+
   const getFileIcon = type => {
     switch (type) {
       case 'application/pdf':
@@ -30,21 +28,30 @@ const FileWrapper = ({
         return <Icon type="file-text" />;
     }
   };
-  const antIcon = <LoadingIcon type="loading" spin />;
+  const loadingIcon = <LoadingIcon type="loading" spin />;
 
   const loadingState = loading => {
     switch (loading) {
       case 'true':
-        return <Spin indicator={antIcon} />
+        return <Spin indicator={loadingIcon} />;
       case 'processed':
-        return <ProcessedText>Processed</ProcessedText>
+        return <ProcessedText>Processed</ProcessedText>;
       default:
         return '';
     }
   };
 
+  useEffect(() => {
+    async function getFilePath() {
+      const filePath = await getFileUrl(file.name);
+      setFileUrl(filePath);
+    }
+
+    getFilePath();
+  }, [file]);
+
   const isProcessed = file.loading === 'processed';
-  
+
   return (
     <FileWrapperStyled>
       <Flex direction="row">
@@ -56,8 +63,14 @@ const FileWrapper = ({
       </Flex>
       <div>
         {loadingState(loading)}
-        <DownloadIcon disabled={!isProcessed} onClick={isProcessed ? downloadFile : null} type="download" />
-        <RemoveIcon type="delete" onClick={deleteFile} />
+        <a
+          href={isProcessed ? fileUrl : null}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <DownloadIcon disabled={!isProcessed} type="download" />
+        </a>
+        <RemoveIcon type="delete" onClick={() => deleteFile(index)} />
       </div>
     </FileWrapperStyled>
   );
