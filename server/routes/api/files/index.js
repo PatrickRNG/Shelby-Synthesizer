@@ -3,6 +3,8 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+
+const auth = require('../../../middlewares/authorization');
 const {
   sendFiles,
   downloadFile
@@ -26,7 +28,8 @@ const upload = multer({
   storage
 });
 
-router.post('/upload', upload.array('files'), sendFiles);
-router.post('/download', downloadFile);
+router.post('/upload', auth(['user']), upload.array('files'), sendFiles);
+router.post('/download', auth(['user']), downloadFile);
+router.get('/secret', auth(['user']), (req, res) => res.json({success: true}));
 
 module.exports = router;

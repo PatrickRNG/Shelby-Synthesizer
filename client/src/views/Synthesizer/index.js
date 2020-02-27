@@ -5,6 +5,7 @@ import { Dropzone, DropText, FileList, FlexForm, Button } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
 import { apiUrl as BASE_URL } from '../../config/';
 import { FileWrapper } from '../../components';
+import Auth from '../../utils/Auth';
 
 const apiUrl = `${BASE_URL}/files`;
 
@@ -41,7 +42,8 @@ const Synthesizer = () => {
     const uploadUrl = `${apiUrl}/upload`;
     return await fetch(uploadUrl, {
       headers: {
-        Accept: '*/*'
+        Accept: '*/*',
+        Authorization: 'Bearer ' + Auth.getToken()
       },
       method: 'POST',
       body: formData
@@ -67,7 +69,8 @@ const Synthesizer = () => {
     const fileUrlRes = await fetch(downloadUrl, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + Auth.getToken()
       },
       method: 'POST',
       body: JSON.stringify({ fileName })

@@ -28,7 +28,7 @@ const login = async (req, res, next) => {
     const user = await User.findAndGenerateToken(req.body);
     const payload = { sub: user.id, name: user.name, email: user.email };
     const token = jwt.sign(payload, config.secret);
-    return res.json({ message: 'OK', token: token, success: true });
+    return res.json({ message: 'OK', token, success: true });
   } catch (error) {
     next(error);
   }

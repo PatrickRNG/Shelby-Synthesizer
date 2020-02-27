@@ -7,15 +7,11 @@ import Auth from '../../utils/Auth';
 
 const { Header, Content, Footer } = AntLayout;
 
-const Layout = ({
-  children,
-  history
-}) => {
-
+const Layout = ({ children, history }) => {
   const logout = () => {
     Auth.deauthenticateUser();
     history.push('/login');
-  }
+  };
 
   return (
     <LayoutContainer>
@@ -23,9 +19,18 @@ const Layout = ({
         <Menu
           theme="dark"
           mode="horizontal"
-          style={{ lineHeight: '64px' }} >
-          <Menu.Item key="1"><Link to="/synthesizer">synthesizer</Link></Menu.Item>
-          <Menu.Item key="2" onClick={logout} style={{float: 'right'}}>Log out</Menu.Item>
+          style={{ lineHeight: '64px' }}
+          selectable={false}
+        >
+          <Menu.Item>
+            <Link to="/synthesizer">Sintetizar</Link>
+          </Menu.Item>
+          <Menu.Item
+            onClick={logout}
+            style={{ float: 'right' }}
+          >
+            Log out
+          </Menu.Item>
         </Menu>
       </Header>
       <Content style={{ padding: '0 50px', marginTop: '30px' }}>
