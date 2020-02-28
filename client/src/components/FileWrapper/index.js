@@ -13,7 +13,15 @@ import {
   ProcessedText
 } from './styles.js';
 
-const FileWrapper = ({ file, loading, index, deleteFile, getFileUrl }) => {
+const FileWrapper = ({
+  file,
+  loading,
+  index,
+  deleteFile,
+  getFileUrl,
+  files,
+  setFiles,
+}) => {
   const [fileUrl, setFileUrl] = useState(null);
 
   const getFileIcon = type => {
@@ -40,10 +48,26 @@ const FileWrapper = ({ file, loading, index, deleteFile, getFileUrl }) => {
     }
   };
 
+  const calcFileSize = size => {
+    if (String(size).length < 7) {
+      return `${Math.round(file.size / 1000)}kb`;
+    }
+
+    return `${Math.round(file.size / 1e6)}mb`;
+  };
+
   useEffect(() => {
     async function getFilePath() {
       const filePath = await getFileUrl(file.name);
       setFileUrl(filePath);
+      // Add download URL to files
+      const newFiles = files.map((val) => {
+        if (file.name === val.name) {
+          val.url = filePath;
+        }
+        return val;
+      });
+      setFiles(newFiles);
     }
 
     getFilePath();
@@ -57,7 +81,7 @@ const FileWrapper = ({ file, loading, index, deleteFile, getFileUrl }) => {
         <FileIcon>{getFileIcon(file.type)}</FileIcon>
         <Flex>
           <FileName>{file.name}</FileName>
-          <FileSize>{Math.round(file.size / 1e6)}mb</FileSize>
+          <FileSize>{calcFileSize(file.size)}</FileSize>
         </Flex>
       </Flex>
       <div>

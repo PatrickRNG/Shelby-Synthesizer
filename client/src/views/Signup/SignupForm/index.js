@@ -10,7 +10,7 @@ const SignupForm = ({ onSubmit, form }) => {
   return (
     <Flex>
       <FormWrapper>
-        <Title>Advocate Synthesizer</Title>
+        <Title>Shelby</Title>
         <StyledForm onSubmit={onSubmit}>
           <FormItem>
             {getFieldDecorator('name', {
@@ -51,9 +51,9 @@ const SignupForm = ({ onSubmit, form }) => {
           </FormItem>
           <FormItem>
             <FormButton type="primary" htmlType="submit">
-              Sign up
+              Cadastre-se
             </FormButton>
-            Already have an account? <Link to="/login">Login</Link>
+            Já tem uma conta? <Link to="/login">Login</Link>
           </FormItem>
         </StyledForm>
       </FormWrapper>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { Dropzone, DropText, FileList, FlexForm, Button } from './styles.js';
@@ -6,11 +6,12 @@ import CloudIcon from '../../assets/icons/cloud-upload';
 import { apiUrl as BASE_URL } from '../../config/';
 import { FileWrapper } from '../../components';
 import Auth from '../../utils/Auth';
+import FileContext from '../../contexts/FileContext';
 
 const apiUrl = `${BASE_URL}/files`;
 
 const Synthesizer = () => {
-  const [files, setFiles] = useState([]);
+  const { files, setFiles } = useContext(FileContext);
 
   const onDrop = useCallback(async acceptedFiles => {
     const newAcceptedFiles = acceptedFiles
@@ -142,6 +143,8 @@ const Synthesizer = () => {
             index={index}
             deleteFile={deleteFile}
             getFileUrl={getFileUrl}
+            setFiles={setFiles}
+            files={files}
           />
         ))}
       </FileList>

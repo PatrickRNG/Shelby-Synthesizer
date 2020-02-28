@@ -23,12 +23,12 @@ const Layout = ({ children, history }) => {
           selectable={false}
         >
           <Menu.Item>
+            <Link to="/">Dashboard</Link>
+          </Menu.Item>
+          <Menu.Item>
             <Link to="/synthesizer">Sintetizar</Link>
           </Menu.Item>
-          <Menu.Item
-            onClick={logout}
-            style={{ float: 'right' }}
-          >
+          <Menu.Item onClick={logout} style={{ float: 'right' }}>
             Log out
           </Menu.Item>
         </Menu>
@@ -37,7 +37,7 @@ const Layout = ({ children, history }) => {
         <Paper>{children}</Paper>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
-        Advocate Synthesizer ©2020 Created by Patrick Passarella
+        Shelby ©2020 Created by Patrick Passarella
       </Footer>
     </LayoutContainer>
   );

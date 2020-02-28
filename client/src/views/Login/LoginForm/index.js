@@ -19,11 +19,11 @@ const LoginForm = ({ errors, onSubmit, form }) => {
   return (
     <Flex>
       <FormWrapper>
-        <Title>Advocate Synthesizer</Title>
+        <Title>Shelby</Title>
         <StyledForm onSubmit={onSubmit}>
           <FormItem>
             {getFieldDecorator('email', {
-              rules: [{ required: true, message: 'Please input your E-mail' }]
+              rules: [{ required: true, message: 'Por favor preencha seu E-mail' }]
             })(
               <Input
                 prefix={<Icon type="mail" style={{ fontSize: 13 }} />}
@@ -35,7 +35,7 @@ const LoginForm = ({ errors, onSubmit, form }) => {
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Please input your Password' }]
+              rules: [{ required: true, message: 'Por favor preencha sua senha' }]
             })(
               <Input
                 prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
@@ -45,11 +45,11 @@ const LoginForm = ({ errors, onSubmit, form }) => {
             )}
           </FormItem>
           <FormItem>
-            <Forgot to="/forgot-password">Forgot password</Forgot>
+            <Forgot to="/forgot-password">Esqueci a senha</Forgot>
             <FormButton type="primary" htmlType="submit">
               Log in
             </FormButton>
-            Or <Link to="/signup">register now!</Link>
+            ou <Link to="/signup">cadastre-se agora!</Link>
           </FormItem>
           {errors.message && <Error>{errors.message}</Error>}
         </StyledForm>
