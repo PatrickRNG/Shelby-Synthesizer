@@ -7,7 +7,9 @@ const router = express.Router();
 const auth = require('../../../middlewares/authorization');
 const {
   sendFiles,
-  downloadFile
+  downloadFile,
+  saveFilePath,
+  getProcessedFiles
 } = require('../../../controllers/files/controller');
 
 const MAX_SIZE = '20000000';
@@ -30,6 +32,7 @@ const upload = multer({
 
 router.post('/upload', auth(['user']), upload.array('files'), sendFiles);
 router.post('/download', auth(['user']), downloadFile);
-router.get('/secret', auth(['user']), (req, res) => res.json({success: true}));
+router.post('/save', auth(['user']), saveFilePath);
+router.get('/processed', auth(['user']), getProcessedFiles);
 
 module.exports = router;

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import jwt_decode from 'jwt-decode'
 
+import { withRouter } from 'react-router';
 import { Synthesizer, Dashboard } from '../../views';
 
 const Main = () => {
+  
   return (
     <Switch>
       <Route exact path="/synthesizer" component={Synthesizer} />

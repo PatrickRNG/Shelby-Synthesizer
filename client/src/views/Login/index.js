@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form } from 'antd';
 
 import LoginForm from './LoginForm';
 import Auth from '../../utils/Auth';
 import Storage from '../../utils/Storage';
-import { apiUrl as BASE_URL } from '../../config/';
-
-const apiUrl = `${BASE_URL}/auth/login`;
+import UserContext from '../../contexts/UserContext';
+import { authUser } from '../../api/auth';
 
 const LoginContainer = ({ form, history }) => {
   const [errors, setErrors] = useState({});
-
-
+  const { setUser } = useContext(UserContext);
+  
   const logout = () => {
     Storage.clear();
   };
-
+  
   useEffect(() => {
     Auth.deauthenticateUser();
     logout();
@@ -36,16 +35,7 @@ const LoginContainer = ({ form, history }) => {
     form.validateFields(async (err, values) => {
       const userObj = { email: values.email, password: values.password };
 
-      const response = await fetch(apiUrl, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(userObj)
-      });
-
-      const responseJson = await response.json();
+      const responseJson = await authUser(userObj);
 
       if (!responseJson.success) {
         return setErrors({
@@ -53,6 +43,7 @@ const LoginContainer = ({ form, history }) => {
         });
       }
 
+      setUser({email: values.email});
       return handleSuccess(responseJson);
     });
   };

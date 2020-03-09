@@ -4,7 +4,7 @@ import { Icon, Spin } from 'antd';
 import {
   FileIcon,
   Flex,
-  FileWrapper as FileWrapperStyled,
+  FileWrapper,
   FileName,
   FileSize,
   RemoveIcon,
@@ -13,14 +13,14 @@ import {
   ProcessedText
 } from './styles.js';
 
-const FileWrapper = ({
+const File = ({
   file,
   loading,
   index,
   deleteFile,
   getFileUrl,
   files,
-  setFiles,
+  setFiles
 }) => {
   const [fileUrl, setFileUrl] = useState(null);
 
@@ -76,11 +76,11 @@ const FileWrapper = ({
   const isProcessed = file.loading === 'processed';
 
   return (
-    <FileWrapperStyled>
+    <FileWrapper>
       <Flex direction="row">
         <FileIcon>{getFileIcon(file.type)}</FileIcon>
         <Flex>
-          <FileName>{file.name}</FileName>
+          <FileName>{(file.name || file.filename)}</FileName>
           <FileSize>{calcFileSize(file.size)}</FileSize>
         </Flex>
       </Flex>
@@ -93,10 +93,10 @@ const FileWrapper = ({
         >
           <DownloadIcon disabled={!isProcessed} type="download" />
         </a>
-        <RemoveIcon type="delete" onClick={() => deleteFile(index)} />
+        <RemoveIcon type="delete" onClick={() => deleteFile(file, index)} />
       </div>
-    </FileWrapperStyled>
+    </FileWrapper>
   );
 };
 
-export default FileWrapper;
+export default File;

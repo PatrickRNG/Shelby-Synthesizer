@@ -4,8 +4,8 @@
   "description": "JWT authentication boilerplate using Mongo and Node",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/nodemon index.js",
-    "start": "./node_modules/.bin/nodemon index.js",
+    "dev": "supervisor index.js",
+    "start": "node index.js",
     "lint": "./node_modules/.bin/eslint **/*.js",
     "test": "cross-env NODE_ENV=test ./node_modules/.bin/mocha --exit"
   },
@@ -32,6 +32,7 @@
     "express": "^4.16.2",
     "express-validation": "^1.0.2",
     "file-saver": "^2.0.2",
+    "global": "^4.4.0",
     "helmet": "^3.21.2",
     "http-status": "^1.0.1",
     "joi": "^14.3.1",
@@ -40,6 +41,7 @@
     "morgan": "^1.9.0",
     "multer": "^1.4.2",
     "passport": "^0.4.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "supervisor": "^0.12.0"
   }
 }

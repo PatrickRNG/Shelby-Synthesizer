@@ -3,15 +3,14 @@ import { useDropzone } from 'react-dropzone';
 
 import { Dropzone, DropText, FileList, FlexForm, Button } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
-import { apiUrl as BASE_URL } from '../../config/';
-import { FileWrapper } from '../../components';
-import Auth from '../../utils/Auth';
+import { File } from '../../components';
 import FileContext from '../../contexts/FileContext';
-
-const apiUrl = `${BASE_URL}/files`;
+import UserContext from '../../contexts/UserContext';
+import { getFileUrl, sendFiles, saveFilePath } from '../../api/files';
 
 const Synthesizer = () => {
-  const { files, setFiles } = useContext(FileContext);
+  const { files, setFiles, deleteFile } = useContext(FileContext);
+  const { user } = useContext(UserContext);
 
   const onDrop = useCallback(async acceptedFiles => {
     const newAcceptedFiles = acceptedFiles
@@ -25,29 +24,11 @@ const Synthesizer = () => {
     setFiles(newAcceptedFiles);
   }, []);
 
-  const deleteFile = index => {
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
-  };
-
   const fakeApiResponse = file => {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(file);
       }, Math.random() * 2000);
-    });
-  };
-
-  const sendFiles = async formData => {
-    const uploadUrl = `${apiUrl}/upload`;
-    return await fetch(uploadUrl, {
-      headers: {
-        Accept: '*/*',
-        Authorization: 'Bearer ' + Auth.getToken()
-      },
-      method: 'POST',
-      body: formData
     });
   };
 
@@ -63,22 +44,6 @@ const Synthesizer = () => {
 
       resolve(files);
     });
-  };
-
-  const getFileUrl = async fileName => {
-    const downloadUrl = `${apiUrl}/download`;
-    const fileUrlRes = await fetch(downloadUrl, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + Auth.getToken()
-      },
-      method: 'POST',
-      body: JSON.stringify({ fileName })
-    });
-
-    const { filePath } = await fileUrlRes.json();
-    return filePath;
   };
 
   const synthesizeFiles = async (e, files) => {
@@ -105,12 +70,16 @@ const Synthesizer = () => {
           formData.append('files', file);
         })
       );
-
+      
       const uploadedFiles = await sendFiles(formData);
       const uploadedFilesJson = await uploadedFiles.json();
 
       const updatedFiles = await addNameToFiles(files, uploadedFilesJson.files);
       setFiles(updatedFiles);
+      
+      const pathPayload = { email: user.email, files };
+      console.log('saveFilePath pathPayload', updatedFiles);
+      await saveFilePath(pathPayload);
     } catch (err) {
       console.log('ERROR', err);
     }
@@ -136,7 +105,7 @@ const Synthesizer = () => {
       </Dropzone>
       <FileList>
         {files.map((file, index) => (
-          <FileWrapper
+          <File
             loading={file.loading}
             key={index}
             file={file}

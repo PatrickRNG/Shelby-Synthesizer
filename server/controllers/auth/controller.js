@@ -79,20 +79,19 @@ const forgot_password = function(req, res) {
             name: config.sendgrid.name
           },
           subject: 'Password help has arrived!',
-          html: `<head>
-        <title>Password Reset Request</title>
-    </head>
-    
-    <body>
-        <div>
-            <p>Copy this link ${url} to reset your password </p>
-            <br>
+          html: `
+          <head>
+            <title>Password Reset Request</title>
+          </head>
+          <body>
             <div>
+              <p>Copy this link ${url} to reset your password </p>
+              <br>
+              <div>
                 Cheers!
+              </div>
             </div>
-        </div>
-       
-    </body>`
+          </body>`
         };
         sgMail.send(msg, (error, result) => {
           if (!error) {

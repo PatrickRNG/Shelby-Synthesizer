@@ -1,11 +1,10 @@
-'use strict'
+'use strict';
 
-const mongoose = require('./services/mongoose')
-const app = require('./services/express')
+const mongoose = require('./services/mongoose');
+const app = require('./services/express');
 // start app and connect to database
-app.start()
+app.start();
 
-mongoose.connect()
+mongoose.connect();
 
-
-module.exports = app
+module.exports = app;

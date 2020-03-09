@@ -1,9 +1,11 @@
 import Layout from './Layout';
 import Main from './Main';
-import FileWrapper from './FileWrapper';
+import File from './File';
+import ContextRoute from './ContextRoute';
 
 export {
   Layout,
   Main,
-  FileWrapper
+  File,
+  ContextRoute
 }
