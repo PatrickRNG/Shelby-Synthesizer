@@ -6,6 +6,7 @@ module.exports = {
   env: process.env.NODE_ENV,
   secret: process.env.APP_SECRET,
   apiUrl: process.env.API_URL,
+  dataApiUrl: process.env.DATA_API_URL,
   mongo: {
     uri: process.env.MONGOURI,
     testURI: process.env.MONGOTESTURI

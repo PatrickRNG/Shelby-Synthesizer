@@ -9,7 +9,8 @@ const {
   sendFiles,
   downloadFile,
   saveFilePath,
-  getProcessedFiles
+  getProcessedFiles,
+  processFile
 } = require('../../../controllers/files/controller');
 
 const MAX_SIZE = '20000000';
@@ -32,7 +33,8 @@ const upload = multer({
 
 router.post('/upload', auth(['user']), upload.array('files'), sendFiles);
 router.post('/download', auth(['user']), downloadFile);
+router.get('/process', auth(['user']), processFile);
 router.post('/save', auth(['user']), saveFilePath);
-router.get('/processed', auth(['user']), getProcessedFiles);
+router.get('/processed', auth(['user']), processFile);
 
 module.exports = router;
