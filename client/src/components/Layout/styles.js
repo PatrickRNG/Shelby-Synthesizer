@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { Layout } from 'antd';
 
-const LayoutContainer = styled(Layout)`
+const { Footer : AntFooter } = Layout;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
 `;
 
@@ -12,7 +16,13 @@ const Paper = styled.div`
   height: 100%;
 `;
 
+const Footer = styled(AntFooter)`
+  padding: 15px;
+  margin-top: 55px;
+`;
+
 export {
   Paper,
-  LayoutContainer
+  Container,
+  Footer
 }

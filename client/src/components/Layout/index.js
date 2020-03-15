@@ -2,19 +2,31 @@ import React from 'react';
 import { Layout as AntLayout, Menu } from 'antd';
 import { withRouter, Link } from 'react-router-dom';
 
-import { Paper, LayoutContainer } from './styles';
+import { Paper, Footer, Container } from './styles';
 import Auth from '../../utils/Auth';
 
-const { Header, Content, Footer } = AntLayout;
+const { Header, Content } = AntLayout;
+
+const buildHeader = header => {
+  switch (header) {
+    case '/':
+      return 'Dashboard';
+    case '/synthesizer':
+      return 'Synthesizer';
+    default:
+      return '';
+  }
+}
 
 const Layout = ({ children, history }) => {
+  console.log(history.location.pathname);
   const logout = () => {
     Auth.deauthenticateUser();
     history.push('/login');
   };
 
   return (
-    <LayoutContainer>
+    <Container>
       <Header>
         <Menu
           theme="dark"
@@ -33,13 +45,14 @@ const Layout = ({ children, history }) => {
           </Menu.Item>
         </Menu>
       </Header>
-      <Content style={{ padding: '0 50px', marginTop: '30px' }}>
+      <Content style={{ padding: '0 50px', marginTop: '20px' }}>
+        <h2>{buildHeader(history.location.pathname)}</h2>
         <Paper>{children}</Paper>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
         Shelby ©2020 Created by Patrick Passarella
       </Footer>
-    </LayoutContainer>
+    </Container>
   );
 };
 

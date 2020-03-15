@@ -22,24 +22,8 @@ const downloadFile = (req, res) => {
   res.json({ filePath });
 };
 
-const saveFilePath = async (req, res, next) => {
-  try {
-    await Files.findOneAndUpdate(
-      { email: req.user.email },
-      { email: req.user.email, $addToSet: { files: req.body.files } },
-      { upsert: true, new: true }
-    ).exec();
-    res.status(200);
-    const response = { success: true };
-    res.json(response);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const processFile = async (req, res, next) => {
   try {
-    console.log('>>>>>>>>> ', req.file);
     const { filename } = req.file;
     const filePath = `uploads/${filename}`
     const dataApiUrl = `${config.dataApiUrl}/getEmentas2`;
@@ -60,6 +44,11 @@ const processFile = async (req, res, next) => {
     const result = await response.json();
     // Update /uploads with the processed file
     base64_decode(result.pdf, filePath);
+    await Files.findOneAndUpdate(
+      { email: req.user.email },
+      { email: req.user.email, $addToSet: { files: {...req.file, loading: 'processed'} } },
+      { upsert: true, new: true }
+    ).exec();
 
     res.json({ file: req.file, success: true });
     res.status(200);
@@ -103,7 +92,6 @@ const deleteProcessedFile = async (req, res, next) => {
 module.exports = {
   sendFiles,
   downloadFile,
-  saveFilePath,
   getProcessedFiles,
   processFile,
   deleteProcessedFile

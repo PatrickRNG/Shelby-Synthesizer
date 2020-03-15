@@ -17,7 +17,7 @@ const RootContent = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    if (Auth.isUserAuthenticated) {
+    if (Auth.isUserAuthenticated()) {
       const token = Auth.getToken();
       Auth.authenticateUser(token);
       const { email } = jwt_decode(token);

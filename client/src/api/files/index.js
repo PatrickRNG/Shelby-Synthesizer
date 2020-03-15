@@ -31,24 +31,6 @@ const sendFiles = async formData => {
   });
 };
 
-// TODO - resolve stringfy removing properties
-const saveFilePath = async (payload) => {
-  const savePathUrl = `${apiUrl}/save`;
-  console.log('client saveFilePath api', payload, '-', JSON.stringify(payload));
-  const fileUrlRes = await fetch(savePathUrl, {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + Auth.getToken()
-    },
-    method: 'POST',
-    body: JSON.stringify(payload)
-  });
-
-  const filesPath = await fileUrlRes.json();
-  return filesPath;
-}
-
 const getProcessedFiles = async (email) => {
   const getFilesUrl = `${apiUrl}/processed?email=${email}`;
   const fileUrlRes = await fetch(getFilesUrl, {
@@ -61,13 +43,44 @@ const getProcessedFiles = async (email) => {
   });
 
   const files = await fileUrlRes.json();
-  console.log('getProcessedFiles client api', files, ' - ', fileUrlRes);
-  return files;
+    return files;
+}
+
+const processFile = async (file) => {
+  const sendFilesUrl = `${apiUrl}/process`;
+  const fileUrlRes = await fetch(sendFilesUrl, {
+    headers: {
+      Accept: '*/*',
+      Authorization: 'Bearer ' + Auth.getToken()
+    },
+    method: 'POST',
+    body: file
+  });
+
+  const response = await fileUrlRes.json();
+  return response;
+}
+
+const deleteProcessedFile = async (file) => {
+  const deleteFileUrl = `${apiUrl}/delete`;
+  const fileUrlRes = await fetch(deleteFileUrl, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + Auth.getToken()
+    },
+    method: 'DELETE',
+    body: file
+  });
+
+  const response = await fileUrlRes.json();
+  return response;
 }
 
 export {
   getFileUrl,
   sendFiles,
-  saveFilePath,
-  getProcessedFiles
+  processFile,
+  getProcessedFiles,
+  deleteProcessedFile
 }

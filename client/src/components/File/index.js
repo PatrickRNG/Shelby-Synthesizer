@@ -16,7 +16,6 @@ import {
 const File = ({
   file,
   loading,
-  index,
   deleteFile,
   getFileUrl,
   files,
@@ -58,7 +57,7 @@ const File = ({
 
   useEffect(() => {
     async function getFilePath() {
-      const filePath = await getFileUrl(file.name);
+      const filePath = await getFileUrl(file.filename || file.name);
       setFileUrl(filePath);
       // Add download URL to files
       const newFiles = files.map((val) => {
@@ -81,7 +80,7 @@ const File = ({
         <FileIcon>{getFileIcon(file.type)}</FileIcon>
         <Flex>
           <FileName>{(file.name || file.filename)}</FileName>
-          <FileSize>{calcFileSize(file.size)}</FileSize>
+          <FileSize>{file.size && calcFileSize(file.size)}</FileSize>
         </Flex>
       </Flex>
       <div>
@@ -93,7 +92,7 @@ const File = ({
         >
           <DownloadIcon disabled={!isProcessed} type="download" />
         </a>
-        <RemoveIcon type="delete" onClick={() => deleteFile(file, index)} />
+        <RemoveIcon type="delete" onClick={deleteFile} />
       </div>
     </FileWrapper>
   );

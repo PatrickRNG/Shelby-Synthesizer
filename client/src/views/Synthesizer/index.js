@@ -5,12 +5,10 @@ import { Dropzone, DropText, FileList, FlexForm, Button } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
 import { File } from '../../components';
 import FileContext from '../../contexts/FileContext';
-import UserContext from '../../contexts/UserContext';
-import { getFileUrl, sendFiles, saveFilePath } from '../../api/files';
+import { getFileUrl, processFile } from '../../api/files';
 
 const Synthesizer = () => {
   const { files, setFiles, deleteFile } = useContext(FileContext);
-  const { user } = useContext(UserContext);
 
   const onDrop = useCallback(async acceptedFiles => {
     const newAcceptedFiles = acceptedFiles
@@ -24,62 +22,32 @@ const Synthesizer = () => {
     setFiles(newAcceptedFiles);
   }, []);
 
-  const fakeApiResponse = file => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(file);
-      }, Math.random() * 2000);
-    });
-  };
-
-  const addNameToFiles = (files, uploadedFiles) => {
-    return new Promise((resolve, reject) => {
-      for (let file of uploadedFiles) {
-        for (let originalFile of files) {
-          if (originalFile.name === file.originalname) {
-            originalFile.filename = file.filename;
-          }
-        }
-      }
-
-      resolve(files);
-    });
-  };
-
   const synthesizeFiles = async (e, files) => {
     try {
       e.preventDefault();
-      const formData = new FormData();
       const loadingFiles = files.map(file => {
         file.loading = 'true';
         return file;
       });
 
+      const formData = new FormData();
+
       setFiles(loadingFiles);
 
       await Promise.all(
         files.map(async file => {
-          const processedFile = await fakeApiResponse(file);
-          processedFile.loading = 'processed';
+          formData.append('file', file);
+          await processFile(formData);
+          
+          file.loading = 'processed';
           const remainingFiles = loadingFiles.filter(
-            val => val.name !== processedFile.name
+            val => val.name !== file.name
           );
-          const filesCompleted = [processedFile, ...remainingFiles];
+          const filesCompleted = [file, ...remainingFiles];
           filesCompleted.sort((a, b) => a.name.localeCompare(b.name));
           setFiles(filesCompleted);
-          formData.append('files', file);
         })
       );
-      
-      const uploadedFiles = await sendFiles(formData);
-      const uploadedFilesJson = await uploadedFiles.json();
-
-      const updatedFiles = await addNameToFiles(files, uploadedFilesJson.files);
-      setFiles(updatedFiles);
-      
-      const pathPayload = { email: user.email, files };
-      console.log('saveFilePath pathPayload', updatedFiles);
-      await saveFilePath(pathPayload);
     } catch (err) {
       console.log('ERROR', err);
     }
@@ -110,7 +78,7 @@ const Synthesizer = () => {
             key={index}
             file={file}
             index={index}
-            deleteFile={deleteFile}
+            deleteFile={() => deleteFile(files, index)}
             getFileUrl={getFileUrl}
             setFiles={setFiles}
             files={files}
