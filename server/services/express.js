@@ -14,8 +14,13 @@ const passport = require('passport');
 const passportJwt = require('../services/passport');
 
 const app = express();
+
+const corsOptions = {
+  exposedHeaders: 'Authorization',
+};
+
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 
 if (config.env !== 'test') app.use(morgan('combined'));

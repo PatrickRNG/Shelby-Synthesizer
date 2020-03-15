@@ -10,7 +10,8 @@ const {
   downloadFile,
   saveFilePath,
   getProcessedFiles,
-  processFile
+  processFile,
+  deleteProcessedFile
 } = require('../../../controllers/files/controller');
 
 const MAX_SIZE = '20000000';
@@ -24,6 +25,15 @@ const storage = multer.diskStorage({
   }
 });
 
+const tmpStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './tmp/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
 const upload = multer({
   limits: {
     fileSize: MAX_SIZE
@@ -31,10 +41,18 @@ const upload = multer({
   storage
 });
 
+const tmpUpload = multer({
+  limits: {
+    fileSize: MAX_SIZE
+  },
+  tmpStorage
+});
+
 router.post('/upload', auth(['user']), upload.array('files'), sendFiles);
 router.post('/download', auth(['user']), downloadFile);
-router.get('/process', auth(['user']), processFile);
+router.post('/process', auth(['user']), upload.single('file'), processFile);
 router.post('/save', auth(['user']), saveFilePath);
-router.get('/processed', auth(['user']), processFile);
+router.get('/processed', auth(['user']), getProcessedFiles);
+router.delete('/delete', auth(['user']), deleteProcessedFile);
 
 module.exports = router;
