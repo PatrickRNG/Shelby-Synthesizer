@@ -26,7 +26,7 @@ const Dashboard = () => {
 
   return (
     <FileList>
-      {files.length > 0 ? files.map((file, index) => (
+      {files && files.length > 0 ? files.map((file, index) => (
         file.loading === 'processed' && <File
           loading={file.loading}
           key={index}
