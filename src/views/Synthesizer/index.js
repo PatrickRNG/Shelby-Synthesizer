@@ -30,12 +30,12 @@ const Synthesizer = () => {
         return file;
       });
 
-      const formData = new FormData();
 
       setFiles(loadingFiles);
 
       await Promise.all(
         files.map(async file => {
+          const formData = new FormData();
           formData.append('file', file);
           await processFile(formData);
           

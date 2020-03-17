@@ -8,32 +8,37 @@ const Dashboard = () => {
   const { user } = useContext(UserContext);
   const [files, setFiles] = useState([]);
 
-  const getFiles = async (email) => {
-    const res = await getProcessedFiles(email);
+  const getFiles = async () => {
+    const res = await getProcessedFiles();
     setFiles(res.files);
   }
 
   useEffect(() => {
     if (user.email) {
-      getFiles(user.email);
+      getFiles();
     }
   }, [user]);
 
+  const deleteFile = async (file) => {
+    await deleteProcessedFile(file);
+    getFiles();
+  };
+
   return (
     <FileList>
-      {files ? files.map((file, index) => (
+      {files.length > 0 ? files.map((file, index) => (
         file.loading === 'processed' && <File
           loading={file.loading}
           key={index}
           file={file}
           index={index}
-          deleteFile={() => deleteProcessedFile(file)}
+          deleteFile={() => deleteFile(file)}
           getFileUrl={getFileUrl}
           setFiles={setFiles}
           files={files}
         />
       )) : 
-        <h3>No processed files found</h3>
+        <h3>Não há arquivos processados</h3>
       }
     </FileList>
   );

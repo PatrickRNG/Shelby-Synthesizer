@@ -19,7 +19,6 @@ const buildHeader = header => {
 }
 
 const Layout = ({ children, history }) => {
-  console.log(history.location.pathname);
   const logout = () => {
     Auth.deauthenticateUser();
     history.push('/login');

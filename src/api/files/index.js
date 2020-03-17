@@ -19,20 +19,20 @@ const getFileUrl = async fileName => {
   return filePath;
 };
 
-const sendFiles = async formData => {
-  const uploadUrl = `${apiUrl}/upload`;
-  return await fetch(uploadUrl, {
-    headers: {
-      Accept: '*/*',
-      Authorization: 'Bearer ' + Auth.getToken()
-    },
-    method: 'POST',
-    body: formData
-  });
-};
+// const sendFiles = async formData => {
+//   const uploadUrl = `${apiUrl}/upload`;
+//   return await fetch(uploadUrl, {
+//     headers: {
+//       Accept: '*/*',
+//       Authorization: 'Bearer ' + Auth.getToken()
+//     },
+//     method: 'POST',
+//     body: formData
+//   });
+// };
 
-const getProcessedFiles = async (email) => {
-  const getFilesUrl = `${apiUrl}/processed?email=${email}`;
+const getProcessedFiles = async () => {
+  const getFilesUrl = `${apiUrl}/processed`;
   const fileUrlRes = await fetch(getFilesUrl, {
     headers: {
       Accept: 'application/json',
@@ -70,7 +70,7 @@ const deleteProcessedFile = async (file) => {
       Authorization: 'Bearer ' + Auth.getToken()
     },
     method: 'DELETE',
-    body: file
+    body: JSON.stringify({ filename: file.filename })
   });
 
   const response = await fileUrlRes.json();
@@ -79,7 +79,7 @@ const deleteProcessedFile = async (file) => {
 
 export {
   getFileUrl,
-  sendFiles,
+  // sendFiles,
   processFile,
   getProcessedFiles,
   deleteProcessedFile
