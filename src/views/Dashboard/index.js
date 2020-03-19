@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import UserContext from '../../contexts/UserContext';
 import { File } from '../../components';
 import { FileList } from '../Synthesizer/styles';
-import { getFileUrl, getProcessedFiles, deleteProcessedFile } from '../../api/files';
+import { getProcessedFiles, deleteProcessedFile } from '../../api/files';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
@@ -33,9 +33,8 @@ const Dashboard = () => {
           file={file}
           index={index}
           deleteFile={() => deleteFile(file)}
-          getFileUrl={getFileUrl}
           setFiles={setFiles}
-          files={files}
+          fileUrl={''}
         />
       )) : 
         <h3>Não há arquivos processados</h3>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Icon, Spin } from 'antd';
+import { getDownloadUrl } from '../../api/files'
 
 import {
   FileIcon,
@@ -17,11 +18,8 @@ const File = ({
   file,
   loading,
   deleteFile,
-  getFileUrl,
-  files,
-  setFiles
 }) => {
-  const [fileUrl, setFileUrl] = useState(null);
+  const [fileUrl, setFileUrl] = useState('');
 
   const getFileIcon = type => {
     switch (type) {
@@ -56,21 +54,13 @@ const File = ({
   };
 
   useEffect(() => {
-    async function getFilePath() {
-      const filePath = await getFileUrl(file.filename || file.name);
-      setFileUrl(filePath);
-      // Add download URL to files
-      const newFiles = files.map((val) => {
-        if (file.name === val.name) {
-          val.url = filePath;
-        }
-        return val;
-      });
-      setFiles(newFiles);
-    }
-
-    getFilePath();
-  }, [file]);
+    const fetchDownloadUrl = async () => {
+      const { downloadUrl } = await getDownloadUrl(file);
+      setFileUrl(downloadUrl);
+    };
+    
+    fetchDownloadUrl();
+  }, []);
 
   const isProcessed = file.loading === 'processed';
 

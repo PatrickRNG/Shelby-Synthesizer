@@ -1,11 +1,11 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { Dropzone, DropText, FileList, FlexForm, Button } from './styles.js';
 import CloudIcon from '../../assets/icons/cloud-upload';
 import { File } from '../../components';
 import FileContext from '../../contexts/FileContext';
-import { getFileUrl, processFile } from '../../api/files';
+import { processFile } from '../../api/files';
 
 const Synthesizer = () => {
   const { files, setFiles, deleteFile } = useContext(FileContext);
@@ -30,7 +30,6 @@ const Synthesizer = () => {
         return file;
       });
 
-
       setFiles(loadingFiles);
 
       await Promise.all(
@@ -45,6 +44,7 @@ const Synthesizer = () => {
           );
           const filesCompleted = [file, ...remainingFiles];
           filesCompleted.sort((a, b) => a.name.localeCompare(b.name));
+          console.log('filesCompleted', filesCompleted);
           setFiles(filesCompleted);
         })
       );
@@ -52,6 +52,7 @@ const Synthesizer = () => {
       console.log('ERROR', err);
     }
   };
+
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -79,9 +80,6 @@ const Synthesizer = () => {
             file={file}
             index={index}
             deleteFile={() => deleteFile(files, index)}
-            getFileUrl={getFileUrl}
-            setFiles={setFiles}
-            files={files}
           />
         ))}
       </FileList>
